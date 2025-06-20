@@ -21,4 +21,13 @@ log-analyzer-py/
 ├── README.md               # Project overview
 └── .gitignore              # Ignore files like __pycache__
 ```
+## Current Progress
 
+- [x] Parses auth log files for failed SSH login attempts
+- [x] Extracts and counts failed attempts per IP address
+- [x] Prints out any IP with more than 3 failures (brute-force detection)
+
+### Example Output
+```
+[!] 192.168.1.45 had 4 failed login attempts
+```
