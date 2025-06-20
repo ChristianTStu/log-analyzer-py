@@ -22,7 +22,9 @@ for line in easy_log_list:
         else:
             failed_ip_counts[ip] = 1
 
-print(failed_ip_counts)
-    
+for ip, count in failed_ip_counts.items():
+    if count > 3:
+        print(f"[!] {ip} had {count} failed login attempts")
+
 
         # do something with ip
