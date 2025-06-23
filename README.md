@@ -1,60 +1,81 @@
-# Log Analyzer (Python)
+# 🛡️ Log Analyzer (Python)
 
-A command-line tool to analyze system logs for signs of brute-force and other unauthorized access attempts.
+A modular command-line tool for analyzing system and access logs to detect suspicious behavior, such as brute-force login attempts and network anomalies.
 
-## Features
+Built to support cybersecurity learning and practical detection logic through Python.
 
-- Parse Unix-style SSH auth logs
-- Detect repeated failed logins from the same IP
-- Modular detection logic in `/detections`
-- Threshold-based brute-force detection
+---
 
-## File Structure
+## ✅ Features
+
+- Detects and classifies **failed login attempts**
+- Flags IPs with **excessive authentication failures**
+- Differentiates between:
+  - `[Suspicious]` – likely brute-force or bot activity
+  - `[Normal]` – borderline behavior
+  - `[Benign]` – likely human error (e.g., password typos)
+- Includes synthetic log generator that simulates:
+  - Normal traffic
+  - Brute-force attacks
+  - Legitimate user login mistakes
+  - Malformed lines and log noise
+ 
+---
+
+## 📁 File Structure
 ```
 log-analyzer-py/
-├── analyzer.py # Entry point script that imports detection logic
-├── detections/ # Detection logic modules
-│ ├── init.py
-│ └── brute_force.py # Contains analyze_log() function
-├── sample_logs/ # Test log files for analysis
-│ ├── auth_easy.log
-│ ├── auth_medium.log
-│ └── auth_hard.log
+├── analyzer.py # Main CLI script
+├── generate_sample_logs.py # Synthetic log generator (10K+ lines)
+├── aggregated_synthetic_access_data.log
+│
+├── detection_categories/
+│ ├── authentication_attempts/
+│ │ └── detect_failed_logins.py
+│ └── network_anomalies/
+│ └── excessive_connections.py
 ├── README.md # Project documentation
 ├── requirements.txt # Python dependencies (currently minimal)
 └── .gitignore # Ignore venvs, cache files, etc.
 ```
+---
 
 ## 🚀 Usage
 
 Run the analyzer script using Python:
 
 ```
-python analyzer.py
+1. Generate the synthetic log file
+- python generate_sample_logs.py
 
-This will analyze all log files listed and output IP addresses with more than 3 failed login attempts by default.
-To change the detection threshold or add custom labels, edit the analyze_log calls in analyzer.py:
+2. Run the Log Analyzer 
+- python analyzer.py
+```
+---
 
-analyze_log("sample_logs/auth_easy.log", threshold=5, label="[EASY]")
+## ⚙️ Detection Thresholds
+
+By default, the failed login detector uses a threshold of 3 failed attempts per IP.
+
+| Count   | Classification                        |
+|---------|----------------------------------------|
+| `< 3`   | `[Benign]` – likely human error        |
+| `== 3`  | `[Normal]` – borderline                |
+| `> 3`   | `[Suspicious]` – needs investigation   |
+
+---
+
+## 🧪 Sample Output
+
+```
+[Suspicious] Log report, 198.51.100.42 had 104 failed login attempts
+[Normal] Log report, 192.168.1.39 had 3 failed login attempts
+[Benign] Log report, 192.168.1.22 had 2 failed attempts (likely user error)
 ```
 
-## 🛠️ Current Progress
+---
 
-- Parses auth log files and extracts failed SSH login attempts
-- Uses regex to detect and count failed attempts per IP address
-- Modular detection logic moved to detections/brute_force.py
-- Accepts threshold and label arguments for flexibility
-- Cleaned file structure for clarity and reusability
-
-### 🧪 Current Example Output
-```
-[!] Inside of [EASY] log report, 192.168.1.45 had 4 failed login attempts
-[!] Inside of [MEDIUM] log report, 203.0.113.10 had 4 failed login attempts
-[!] Inside of [HARD] log report, 198.51.100.77 had 6 failed login attempts
-[!] Inside of [HARD] log report, 192.168.1.101 had 6 failed login attempts
-```
-
-📌 Next Steps
+## 📌 Next Steps
 
 - Add CLI argument support (argparse) to accept file paths, thresholds, and labels from the terminal
 - Add support for exporting results to a .csv or .json file
