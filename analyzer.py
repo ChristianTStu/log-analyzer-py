@@ -1,18 +1,22 @@
 import re
 
-easy_log = open("sample_logs/auth_easy.log", "r")
-failed_ip_counts = {}
 
-for line in easy_log:
-    if "Failed password" in line:
-        ip_matches = re.findall(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", line)
-        if ip_matches:
-            ip = ip_matches[0]
-            if ip in failed_ip_counts:
-                failed_ip_counts[ip] += 1
-            else:
-                failed_ip_counts[ip] = 1
+def analyze_log(path, threshold=3, label=""):
+    easy_log = open(path, "r")
+    failed_ip_counts = {}
+    for line in easy_log:
+        if "Failed password" in line:
+            ip_matches = re.findall(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", line)
+            if ip_matches:
+                ip = ip_matches[0]
+                if ip in failed_ip_counts:
+                    failed_ip_counts[ip] += 1
+                else:
+                    failed_ip_counts[ip] = 1
+    for ip, count in failed_ip_counts.items():
+        if count > 3:
+            print(f"[!] Inside of {label} log report, {ip} had {count} failed login attempts")
 
-for ip, count in failed_ip_counts.items():
-    if count > 3:
-        print(f"[!] {ip} had {count} failed login attempts")
+analyze_log("sample_logs/auth_easy.log", label="[EASY]")
+analyze_log("sample_logs/auth_medium.log", label ="[MEDIUM]")
+analyze_log("sample_logs/auth_hard.log", label ="[HARD]")
