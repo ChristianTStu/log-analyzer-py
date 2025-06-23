@@ -29,7 +29,7 @@ log-analyzer-py/
 
 Run the analyzer script using Python:
 
-```bash
+```
 python analyzer.py
 
 This will analyze all log files listed and output IP addresses with more than 3 failed login attempts by default.
