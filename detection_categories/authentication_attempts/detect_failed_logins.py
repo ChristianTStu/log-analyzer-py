@@ -1,6 +1,6 @@
 import re
 
-def analyze_log(path, threshold=3, label=""):
+def detect_failed_logins(path, threshold=3, label=""):
     easy_log = open(path, "r")
     failed_ip_counts = {}
     for line in easy_log:
