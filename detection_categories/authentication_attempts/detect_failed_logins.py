@@ -1,6 +1,6 @@
 import re
 
-def detect_failed_logins(path, threshold=3, label=""):
+def detect_failed_logins(path, threshold=3):
     easy_log = open(path, "r")
     failed_ip_counts = {}
     for line in easy_log:
@@ -13,5 +13,8 @@ def detect_failed_logins(path, threshold=3, label=""):
                 else:
                     failed_ip_counts[ip] = 1
     for ip, count in failed_ip_counts.items():
-        if count > 3:
-            print(f"[!] Inside of {label} log report, {ip} had {count} failed login attempts")
+        if count > threshold:
+            print(f"[Suspicious] Log report, {ip} had {count} failed login attempts")
+        else:
+            print(f"[Normal] Log report, {ip} had {count} failed attempts.")
+
