@@ -15,6 +15,9 @@ def detect_failed_logins(path, threshold=3):
     for ip, count in failed_ip_counts.items():
         if count > threshold:
             print(f"[Suspicious] Log report, {ip} had {count} failed login attempts")
+        elif count == threshold:
+            print(f"[Normal] Log report, {ip} had {count} failed login attempts")
+
         else:
-            print(f"[Normal] Log report, {ip} had {count} failed attempts.")
+            print(f"[Begin] Log report, {ip} had {count} failed attempts.")
 
